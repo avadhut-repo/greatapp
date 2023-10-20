@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:n0="http://www.oracle.com/xml/ns/dbchangelog-ext" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+	<changeSet id="35df12ba6907f8de93f51b25271742cd5ff9462d" author="(HR)-Generated" failOnError="false"   runOnChange="true" runAlways="false"  >
+		<n0:createOracleRefConstraint objectName="FIBR_CITI_FK" objectType="REF_CONSTRAINT" ownerName="HR"  replaceIfExists="true" >
+			<n0:source><![CDATA[
+  ALTER TABLE "HR"."FI_BRANCHES" ADD CONSTRAINT "FIBR_CITI_FK" FOREIGN KEY ("CITY_ISN")
+	  REFERENCES "HR"."CITIES" ("ISN") ENABLE;
+  ALTER TABLE "HR"."FI_BRANCHES" ADD CONSTRAINT "FIBR_APUS_FK1" FOREIGN KEY ("CREATED_BY")
+	  REFERENCES "HR"."APP_USERS" ("ISN") ENABLE;
+  ALTER TABLE "HR"."FI_BRANCHES" ADD CONSTRAINT "FIBR_APUS_FK2" FOREIGN KEY ("UPDATED_BY")
+	  REFERENCES "HR"."APP_USERS" ("ISN") ENABLE;]]></n0:source>
+		</n0:createOracleRefConstraint>
+	</changeSet>
+</databaseChangeLog>

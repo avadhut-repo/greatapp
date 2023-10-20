@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:n0="http://www.oracle.com/xml/ns/dbchangelog-ext" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+	<changeSet id="5c3de07805546665ea5f89a9da6248912e422dd8" author="(HR)-Generated" failOnError="false"   runOnChange="true" runAlways="false"  >
+		<n0:createOracleRefConstraint objectName="DEPT_LOC_FK" objectType="REF_CONSTRAINT" ownerName="HR"  replaceIfExists="true" >
+			<n0:source><![CDATA[
+  ALTER TABLE "HR"."DEPARTMENTS" ADD CONSTRAINT "DEPT_LOC_FK" FOREIGN KEY ("LOCATION_ID")
+	  REFERENCES "HR"."LOCATIONS" ("LOCATION_ID") ENABLE;
+  ALTER TABLE "HR"."DEPARTMENTS" ADD CONSTRAINT "DEPT_MGR_FK" FOREIGN KEY ("MANAGER_ID")
+	  REFERENCES "HR"."EMPLOYEES" ("EMPLOYEE_ID") ENABLE;]]></n0:source>
+		</n0:createOracleRefConstraint>
+	</changeSet>
+</databaseChangeLog>

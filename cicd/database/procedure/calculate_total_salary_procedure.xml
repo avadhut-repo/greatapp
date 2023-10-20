@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:n0="http://www.oracle.com/xml/ns/dbchangelog-ext" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+	<changeSet id="a6f6edf592e5fc102a41d77ff9b6834913a9f86d" author="(HR)-Generated" failOnError="false"   runOnChange="true" runAlways="false"  >
+		<n0:createOracleProcedure objectName="CALCULATE_TOTAL_SALARY" objectType="PROCEDURE" ownerName="HR"  replaceIfExists="true" >
+			<n0:source><![CDATA[
+  CREATE OR REPLACE EDITIONABLE PROCEDURE "HR"."CALCULATE_TOTAL_SALARY" (
+  p_department_id IN departments.department_id%TYPE,
+  p_total_salary OUT NUMBER
+) IS
+BEGIN
+  SELECT nvl(SUM(salary),0)
+  INTO p_total_salary
+  FROM employees
+  WHERE department_id = p_department_id;
+
+--  IF p_total_salary IS NULL THEN
+--    p_total_salary := 0; -- If no employees found, set total salary to 0
+--  END IF;
+
+  DBMS_OUTPUT.PUT_LINE('Total Salary for Department ' || p_department_id || ': ' || p_total_salary);
+END;
+]]></n0:source>
+		</n0:createOracleProcedure>
+	</changeSet>
+</databaseChangeLog>

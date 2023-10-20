@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:n0="http://www.oracle.com/xml/ns/dbchangelog-ext" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+	<changeSet id="f7d5564ff4367efd696c69d1d3cadddfffc1e22c" author="(HR)-Generated" failOnError="false"   runOnChange="true" runAlways="false"  >
+		<n0:createOraclePackageSpec objectName="AUDIT_API" objectType="PACKAGE_SPEC" ownerName="HR"  replaceIfExists="true" >
+			<n0:source><![CDATA[
+  CREATE OR REPLACE EDITIONABLE PACKAGE "HR"."AUDIT_API" AS
+    PROCEDURE check_val (
+        i_tname     IN VARCHAR2,
+        i_cname     IN VARCHAR2,
+        i_operation IN VARCHAR2,
+        i_new IN VARCHAR2,
+        i_old IN VARCHAR2
+    );
+    PROCEDURE check_val (
+    i_tname     IN VARCHAR2,
+    i_cname     IN VARCHAR2,
+    i_operation IN VARCHAR2,
+    i_new IN DATE,
+    i_old IN DATE
+);
+    PROCEDURE check_val (
+    i_tname     IN VARCHAR2,
+    i_cname     IN VARCHAR2,
+    i_operation IN VARCHAR2,
+    i_new IN NUMBER,
+    i_old IN NUMBER
+);
+end;
+]]></n0:source>
+		</n0:createOraclePackageSpec>
+	</changeSet>
+</databaseChangeLog>

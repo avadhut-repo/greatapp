@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:n0="http://www.oracle.com/xml/ns/dbchangelog-ext" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+	<changeSet id="c1e8717a1baa1e137a6073a40d3b6465793d2c25" author="(HR)-Generated" failOnError="false"   runOnChange="true" runAlways="false"  >
+		<n0:createOraclePackageSpec objectName="STD_MAINTAIN" objectType="PACKAGE_SPEC" ownerName="HR"  replaceIfExists="true" >
+			<n0:source><![CDATA[
+  CREATE OR REPLACE EDITIONABLE PACKAGE "HR"."STD_MAINTAIN" 
+AS
+  PROCEDURE UPDATE_STUDENTS(
+    V_ID IN NUMBER,
+    V_NAME IN VARCHAR2,
+    V_CLASS IN VARCHAR2);
+
+  PROCEDURE INSERT_STUDENTS(
+    V_ID IN NUMBER,
+    V_NAME IN VARCHAR2,
+    V_CLASS IN VARCHAR2);
+
+  PROCEDURE DELETE_STUDENTS(
+    V_ID IN NUMBER);
+END;]]></n0:source>
+		</n0:createOraclePackageSpec>
+	</changeSet>
+</databaseChangeLog>

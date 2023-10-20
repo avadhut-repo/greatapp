@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:n0="http://www.oracle.com/xml/ns/dbchangelog-ext" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+	<changeSet id="cb6c8d55a3b449c70abbab5143be368cbe1032b9" author="(HR)-Generated" failOnError="false"   runOnChange="true" runAlways="false"  >
+		<n0:createOracleFunction objectName="UNIQUE_NUMBER_FUN" objectType="FUNCTION" ownerName="HR"  replaceIfExists="true" >
+			<n0:source><![CDATA[
+  CREATE OR REPLACE EDITIONABLE FUNCTION "HR"."UNIQUE_NUMBER_FUN" (
+    p_num_type IN NVARCHAR2
+) RETURN NUMBER IS
+    l_unique_no NUMBER(16,0);
+
+-- p_num_type =>
+-- F -- File Number  C - Customer ID  I - For ISN
+-- Created on 06- Dec 2022  Arvind D
+
+BEGIN
+    IF p_num_type = 'F' -- File Number
+     THEN
+        UPDATE fi_configurations
+        SET
+            next_file_number = next_file_number + 1
+        WHERE
+            FI_CODE = '001';
+
+        SELECT
+            next_file_number
+        INTO l_unique_no
+        FROM
+            fi_configurations
+        WHERE
+            FI_CODE = '001';
+
+    END IF;
+
+    IF p_num_type = 'C'-- Customer Id 
+
+     THEN
+        UPDATE fi_configurations
+        SET
+            next_cust_id = next_cust_id + 1
+        WHERE
+            FI_CODE = '001';
+
+        SELECT
+            next_cust_id
+        INTO l_unique_no
+        FROM
+            fi_configurations
+        WHERE
+            FI_CODE = '001';
+
+    END IF;
+
+    COMMIT;
+    RETURN l_unique_no;
+END;]]></n0:source>
+		</n0:createOracleFunction>
+	</changeSet>
+</databaseChangeLog>

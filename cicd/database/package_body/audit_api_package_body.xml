@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:n0="http://www.oracle.com/xml/ns/dbchangelog-ext" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+	<changeSet id="864d77bbdc4f287ea1cc7e6671f466581d32d81d" author="(HR)-Generated" failOnError="false"   runOnChange="true" runAlways="false"  >
+		<n0:createOraclePackageBody objectName="AUDIT_API" objectType="PACKAGE_BODY" ownerName="HR"  replaceIfExists="true" >
+			<n0:source><![CDATA[
+  CREATE OR REPLACE EDITIONABLE PACKAGE BODY "HR"."AUDIT_API" AS
+
+    PROCEDURE check_val (
+        i_tname IN VARCHAR2,
+        i_cname IN VARCHAR2,
+        i_operation IN VARCHAR2,
+        i_new IN VARCHAR2,
+        i_old IN VARCHAR2
+    ) IS
+    BEGIN
+        IF ( i_new <> i_old OR (
+            i_new IS NULL
+            AND i_old IS NOT NULL)
+            OR(i_new IS NOT NULL
+                     AND i_old IS NULL)
+                     ) THEN
+                     INSERT INTO audit_tbl VALUES(
+                to_char(sysdate, 'dd/mon/yyyy hh24:mi:ss'),
+                user,
+                upper(i_tname),
+                upper(i_cname),
+                 i_operation,
+                 i_old,
+                 i_new
+            );
+
+        END IF;
+    END;
+    PROCEDURE check_val (
+        i_tname IN VARCHAR2,
+        i_cname IN VARCHAR2,
+        i_operation IN VARCHAR2,
+        i_new IN DATE,
+        i_old IN DATE
+    ) IS
+    BEGIN
+       IF ( i_new <> i_old OR
+       (i_new IS NULL AND i_old IS NOT NULL)
+       OR i_new IS NOT NULL AND i_old IS NULL
+                               )THEN
+            INSERT INTO audit_tbl VALUES(
+                to_char(sysdate, 'dd/mon/yyyy hh24:mi:ss'),
+                user,
+                upper(i_tname),
+                upper(i_cname),
+                i_operation,
+                to_char(i_old, 'dd-mon-yyyy hh24:mi:ss'),
+                to_char(i_new, 'dd-mon-yyyy hh23:mi:ss')
+            );
+    END IF;
+    END;
+PROCEDURE check_val (
+    i_tname IN VARCHAR2,
+    i_cname IN VARCHAR2,
+    i_operation IN VARCHAR2,
+    i_new IN NUMBER,
+    i_old IN NUMBER
+    ) IS
+begin
+if ( i_new <> i_old or
+    (i_new is null and i_old is not null)
+    or(i_new is not null and i_old is null)
+    )
+    then
+insert into audit_tbl values(
+        to_char(sysdate,'dd/mon/yyyy hh24:mi:ss'),
+        user,
+        upper(i_tname), 
+        upper(i_cname),
+        i_operation,
+        i_old,
+        i_new);
+        end if;
+end;
+end audit_api ;
+]]></n0:source>
+		</n0:createOraclePackageBody>
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:n0="http://www.oracle.com/xml/ns/dbchangelog-ext" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+	<changeSet id="4efe5c015559e911d6cb6b5839dcd600eb04ac88" author="(HR)-Generated" failOnError="false"   runOnChange="true" runAlways="false"  >
+		<n0:createOracleRefConstraint objectName="ROLE_WORK_FK" objectType="REF_CONSTRAINT" ownerName="HR"  replaceIfExists="true" >
+			<n0:source><![CDATA[
+  ALTER TABLE "HR"."ROLES" ADD CONSTRAINT "ROLE_WORK_FK" FOREIGN KEY ("WORKFLOW_ISN")
+	  REFERENCES "HR"."WORKFLOWS" ("ISN") ENABLE;
+  ALTER TABLE "HR"."ROLES" ADD CONSTRAINT "ROLE_APUS_FK1" FOREIGN KEY ("CREATED_BY")
+	  REFERENCES "HR"."APP_USERS" ("ISN") ENABLE;
+  ALTER TABLE "HR"."ROLES" ADD CONSTRAINT "ROLEAPUS_FK2" FOREIGN KEY ("UPDATED_BY")
+	  REFERENCES "HR"."APP_USERS" ("ISN") ENABLE;]]></n0:source>
+		</n0:createOracleRefConstraint>
+	</changeSet>
+</databaseChangeLog>

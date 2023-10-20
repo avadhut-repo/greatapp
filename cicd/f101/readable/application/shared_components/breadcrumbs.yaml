@@ -1,0 +1,21 @@
+---
+- # ====== Breadcrumb: Breadcrumb ==============================
+  id: 1415651850738429
+  identification: 
+    name: Breadcrumb
+
+  entries: 
+  - # ====== Entry: std link =====================================
+    id: 2209211312344348
+    identification: 
+      name: std link
+      page-number: 3
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:3:&APP_SESSION.::&DEBUG.:::'
+        page: 3 # std link
+

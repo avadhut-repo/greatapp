@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:n0="http://www.oracle.com/xml/ns/dbchangelog-ext" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+	<changeSet id="1e56a8f4bc74c78d09d9ea1af489a20f906e8e82" author="(HR)-Generated" failOnError="false"   runOnChange="true" runAlways="false"  >
+		<n0:createOraclePackageBody objectName="STD_MAINTAIN" objectType="PACKAGE_BODY" ownerName="HR"  replaceIfExists="true" >
+			<n0:source><![CDATA[
+  CREATE OR REPLACE EDITIONABLE PACKAGE BODY "HR"."STD_MAINTAIN" 
+AS
+  PROCEDURE UPDATE_STUDENTS(
+    V_ID IN NUMBER,
+    V_NAME IN VARCHAR2,
+    V_CLASS IN VARCHAR2)
+  IS
+  BEGIN      
+    UPDATE students@mylink003 
+    SET "name" = V_NAME,
+        "class" = V_CLASS
+    WHERE "id" = V_ID;
+    COMMIT;
+  END UPDATE_STUDENTS;
+
+  PROCEDURE INSERT_STUDENTS(
+    V_ID IN NUMBER,
+    V_NAME IN VARCHAR2,
+    V_CLASS IN VARCHAR2)
+  IS
+  BEGIN
+    INSERT INTO students@mylink003 ("id", "name", "class")
+    VALUES (V_ID, V_NAME, V_CLASS);
+    COMMIT;
+  END INSERT_STUDENTS;
+
+  PROCEDURE DELETE_STUDENTS(
+    V_ID IN NUMBER)
+  IS
+  BEGIN
+    DELETE FROM students@mylink003
+    WHERE "id" = V_ID;
+    COMMIT;
+  END DELETE_STUDENTS;
+END STD_MAINTAIN;
+]]></n0:source>
+		</n0:createOraclePackageBody>
+	</changeSet>
+</databaseChangeLog>

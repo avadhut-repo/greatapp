@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:n0="http://www.oracle.com/xml/ns/dbchangelog-ext" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+	<changeSet id="b10d4c295c9e518e55c5f34b72e9fe1d16b1eeeb" author="(HR)-Generated" failOnError="false"   runOnChange="true" runAlways="false"  >
+		<n0:createOracleRefConstraint objectName="CITI_STAT_FK" objectType="REF_CONSTRAINT" ownerName="HR"  replaceIfExists="true" >
+			<n0:source><![CDATA[
+  ALTER TABLE "HR"."CITIES" ADD CONSTRAINT "CITI_STAT_FK" FOREIGN KEY ("STATE_ISN")
+	  REFERENCES "HR"."STATES" ("ISN") ENABLE;
+  ALTER TABLE "HR"."CITIES" ADD CONSTRAINT "CITI_APUS_FK1" FOREIGN KEY ("CREATED_BY")
+	  REFERENCES "HR"."APP_USERS" ("ISN") ENABLE;
+  ALTER TABLE "HR"."CITIES" ADD CONSTRAINT "CITI_APUS_FK2" FOREIGN KEY ("UPDATED_BY")
+	  REFERENCES "HR"."APP_USERS" ("ISN") ENABLE;]]></n0:source>
+		</n0:createOracleRefConstraint>
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,2069 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="Datavsn (generated)" id="1697791470696-1">
+        <createTable tableName="REGIONS">
+            <column name="REGION_ID" type="NUMBER">
+                <constraints notNullConstraintName="REGION_ID_NN" nullable="false" primaryKey="true" primaryKeyName="REG_ID_PK"/>
+            </column>
+            <column name="REGION_NAME" type="VARCHAR2(25 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-2">
+        <createTable remarks="Locations table that contains specific address of a specific office,&#10;warehouse, and/or production site of a company. Does not store addresses /&#10;locations of customers. Contains 23 rows; references with the&#10;departments and countries tables." tableName="LOCATIONS">
+            <column name="LOCATION_ID" remarks="Primary key of locations table" type="NUMBER(4, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="LOC_ID_PK"/>
+            </column>
+            <column name="STREET_ADDRESS" remarks="Street address of an office, warehouse, or production site of a company.&#10;Contains building number and street name" type="VARCHAR2(40 BYTE)"/>
+            <column name="POSTAL_CODE" remarks="Postal code of the location of an office, warehouse, or production site&#10;of a company." type="VARCHAR2(12 BYTE)"/>
+            <column name="CITY" remarks="A not null column that shows city where an office, warehouse, or&#10;production site of a company is located." type="VARCHAR2(30 BYTE)">
+                <constraints notNullConstraintName="LOC_CITY_NN" nullable="false"/>
+            </column>
+            <column name="STATE_PROVINCE" remarks="State or Province where an office, warehouse, or production site of a&#10;company is located." type="VARCHAR2(25 BYTE)"/>
+            <column name="COUNTRY_ID" remarks="Country where an office, warehouse, or production site of a company is&#10;located. Foreign key to country_id column of the countries table." type="CHAR(2 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-3">
+        <createTable remarks="Departments table that shows details of departments where employees&#10;work. Contains 27 rows; references with locations, employees, and job_history tables." tableName="DEPARTMENTS">
+            <column name="DEPARTMENT_ID" remarks="Primary key column of departments table." type="NUMBER(4, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="DEPT_ID_PK"/>
+            </column>
+            <column name="DEPARTMENT_NAME" remarks="A not null column that shows name of a department. Administration,&#10;Marketing, Purchasing, Human Resources, Shipping, IT, Executive, Public&#10;Relations, Sales, Finance, and Accounting." type="VARCHAR2(30 BYTE)">
+                <constraints notNullConstraintName="DEPT_NAME_NN" nullable="false"/>
+            </column>
+            <column name="MANAGER_ID" remarks="Manager_id of a department. Foreign key to employee_id column of employees table. The manager_id column of the employee table references this column." type="NUMBER(6, 0)"/>
+            <column name="LOCATION_ID" remarks="Location id where a department is located. Foreign key to location_id column of locations table." type="NUMBER(4, 0)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-4">
+        <createTable remarks="jobs table with job titles and salary ranges. Contains 19 rows.&#10;References with employees and job_history table." tableName="JOBS">
+            <column name="JOB_ID" remarks="Primary key of jobs table." type="VARCHAR2(10 BYTE)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="JOB_ID_PK"/>
+            </column>
+            <column name="JOB_TITLE" remarks="A not null column that shows job title, e.g. AD_VP, FI_ACCOUNTANT" type="VARCHAR2(35 BYTE)">
+                <constraints notNullConstraintName="JOB_TITLE_NN" nullable="false"/>
+            </column>
+            <column name="MIN_SALARY" remarks="Minimum salary for a job title." type="NUMBER(6, 0)"/>
+            <column name="MAX_SALARY" remarks="Maximum salary for a job title" type="NUMBER(6, 0)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-5">
+        <createTable remarks="employees table. Contains 107 rows. References with departments,&#10;jobs, job_history tables. Contains a self reference." tableName="EMPLOYEES">
+            <column name="EMPLOYEE_ID" remarks="Primary key of employees table." type="NUMBER(6, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="EMP_EMP_ID_PK"/>
+            </column>
+            <column name="FIRST_NAME" remarks="First name of the employee. A not null column." type="VARCHAR2(20 BYTE)"/>
+            <column name="LAST_NAME" remarks="Last name of the employee. A not null column." type="VARCHAR2(25 BYTE)">
+                <constraints notNullConstraintName="EMP_LAST_NAME_NN" nullable="false"/>
+            </column>
+            <column name="EMAIL" remarks="Email id of the employee" type="VARCHAR2(25 BYTE)">
+                <constraints notNullConstraintName="EMP_EMAIL_NN" nullable="false"/>
+            </column>
+            <column name="PHONE_NUMBER" remarks="Phone number of the employee; includes country code and area code" type="VARCHAR2(20 BYTE)"/>
+            <column name="HIRE_DATE" remarks="Date when the employee started on this job. A not null column." type="date">
+                <constraints notNullConstraintName="EMP_HIRE_DATE_NN" nullable="false"/>
+            </column>
+            <column name="JOB_ID" remarks="Current job of the employee; foreign key to job_id column of the&#10;jobs table. A not null column." type="VARCHAR2(10 BYTE)">
+                <constraints notNullConstraintName="EMP_JOB_NN" nullable="false"/>
+            </column>
+            <column name="SALARY" remarks="Monthly salary of the employee. Must be greater&#10;than zero (enforced by constraint emp_salary_min)" type="NUMBER(8, 2)"/>
+            <column name="COMMISSION_PCT" remarks="Commission percentage of the employee; Only employees in sales&#10;department elgible for commission percentage" type="NUMBER(2, 2)"/>
+            <column name="MANAGER_ID" remarks="Manager id of the employee; has same domain as manager_id in&#10;departments table. Foreign key to employee_id column of employees table.&#10;(useful for reflexive joins and CONNECT BY query)" type="NUMBER(6, 0)"/>
+            <column name="DEPARTMENT_ID" remarks="Department id where employee works; foreign key to department_id&#10;column of the departments table" type="NUMBER(4, 0)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-6">
+        <createTable remarks="Table that stores job history of the employees. If an employee&#10;changes departments within the job or changes jobs within the department,&#10;new rows get inserted into this table with old job information of the&#10;employee. Contains a complex primary key: employee_id+start_date.&#10;Contains 25 rows. References with jobs, employees, and departments tables." tableName="JOB_HISTORY">
+            <column name="EMPLOYEE_ID" remarks="A not null column in the complex primary key employee_id+start_date.&#10;Foreign key to employee_id column of the employee table" type="NUMBER(6, 0)">
+                <constraints notNullConstraintName="JHIST_EMPLOYEE_NN" nullable="false" primaryKey="true" primaryKeyName="JHIST_EMP_ID_ST_DATE_PK"/>
+            </column>
+            <column name="START_DATE" remarks="A not null column in the complex primary key employee_id+start_date.&#10;Must be less than the end_date of the job_history table. (enforced by&#10;constraint jhist_date_interval)" type="date">
+                <constraints notNullConstraintName="JHIST_START_DATE_NN" nullable="false" primaryKey="true" primaryKeyName="JHIST_EMP_ID_ST_DATE_PK"/>
+            </column>
+            <column name="END_DATE" remarks="Last day of the employee in this job role. A not null column. Must be&#10;greater than the start_date of the job_history table.&#10;(enforced by constraint jhist_date_interval)" type="date">
+                <constraints notNullConstraintName="JHIST_END_DATE_NN" nullable="false"/>
+            </column>
+            <column name="JOB_ID" remarks="Job role in which the employee worked in the past; foreign key to&#10;job_id column in the jobs table. A not null column." type="VARCHAR2(10 BYTE)">
+                <constraints notNullConstraintName="JHIST_JOB_NN" nullable="false"/>
+            </column>
+            <column name="DEPARTMENT_ID" remarks="Department id in which the employee worked in the past; foreign key to deparment_id column in the departments table" type="NUMBER(4, 0)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-7">
+        <createTable tableName="AUDIT_TBL">
+            <column name="USER_DATE" type="VARCHAR2(50 BYTE)"/>
+            <column name="WHO" type="VARCHAR2(30 BYTE)"/>
+            <column name="TNAME" type="VARCHAR2(30 BYTE)"/>
+            <column name="CNAME" type="VARCHAR2(30 BYTE)"/>
+            <column name="OPERATION" type="VARCHAR2(50 BYTE)"/>
+            <column name="OLD" type="VARCHAR2(2000 BYTE)"/>
+            <column name="NEW" type="VARCHAR2(2000 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-8">
+        <createTable tableName="BRANCHS">
+            <column name="BR_ID" type="NUMBER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="BRANCHS_PK"/>
+            </column>
+            <column name="BR_NAME" type="VARCHAR2(50 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-9">
+        <createTable tableName="abc">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="num" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="desc" type="VARCHAR2(4 BYTE)"/>
+            <column name="LAST_MODIFIED" type="VARCHAR2(30 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-10">
+        <createTable tableName="FI_CONFIGURATIONS">
+            <column name="FI_CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="FICO_PK"/>
+            </column>
+            <column name="NAME" type="NVARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADDRESS1" type="NVARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADDRESS2" type="NVARCHAR2(50)"/>
+            <column name="ADDRESS3" type="NVARCHAR2(50)"/>
+            <column name="CITY_ISN" type="NUMBER(6, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ZIPCODE" type="VARCHAR2(10 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CURRENT_DATE" type="date"/>
+            <column name="VERSION_NO" type="VARCHAR2(30 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MIN_AGE_FOR_LOAN" type="NUMBER(*, 0)"/>
+            <column name="RETIREMENT_AGE_MEN" type="NUMBER(*, 0)"/>
+            <column name="RETIREMENT_AGE_WOMEN" type="NUMBER(*, 0)"/>
+            <column name="BASE_CURRENCY_CODE" type="VARCHAR2(3 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="PWD_HASH_ALGORITHM" type="NUMBER(1, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MIN_LEN_USERNAME" type="NUMBER(2, 0)"/>
+            <column name="MIN_LEN_PASSWORD" type="NUMBER(2, 0)"/>
+            <column name="NO_OF_PWD_ATTEMPTS" type="NUMBER(2, 0)"/>
+            <column name="PASSWORD_VALIDITY" type="NUMBER(2, 0)"/>
+            <column name="APP_START_DATE" type="date"/>
+            <column defaultValue="N" name="LINK_TO_CBS" type="VARCHAR2(1 BYTE)"/>
+            <column name="NEXT_CUST_ID" type="NUMBER(16, 0)"/>
+            <column name="END_CUST_ID" type="NUMBER(16, 0)"/>
+            <column name="NEXT_FILE_NUMBER" type="NUMBER(16, 0)"/>
+            <column name="END_FILE_NUMBER" type="NUMBER(16, 0)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-11">
+        <createTable tableName="STUDENTS">
+            <column name="ID" type="NUMBER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0023049"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(20 BYTE)"/>
+            <column name="LAST_MODIFIED" type="date"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-12">
+        <createView fullDefinition="true" viewName="EMP_DETAILS_VIEW">CREATE OR REPLACE FORCE VIEW "EMP_DETAILS_VIEW" ("EMPLOYEE_ID", "JOB_ID", "MANAGER_ID", "DEPARTMENT_ID", "LOCATION_ID", "COUNTRY_ID", "FIRST_NAME", "LAST_NAME", "SALARY", "COMMISSION_PCT", "DEPARTMENT_NAME", "JOB_TITLE", "CITY", "STATE_PROVINCE", "COUNTRY_NAME", "REGION_NAME") AS SELECT
+  e.employee_id,
+  e.job_id,
+  e.manager_id,
+  e.department_id,
+  d.location_id,
+  l.country_id,
+  e.first_name,
+  e.last_name,
+  e.salary,
+  e.commission_pct,
+  d.department_name,
+  j.job_title,
+  l.city,
+  l.state_province,
+  c.country_name,
+  r.region_name
+FROM
+  employees e,
+  departments d,
+  jobs j,
+  locations l,
+  countries c,
+  regions r
+WHERE e.department_id = d.department_id
+  AND d.location_id = l.location_id
+  AND l.country_id = c.country_id
+  AND c.region_id = r.region_id
+  AND j.job_id = e.job_id
+WITH READ ONLY</createView>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-13">
+        <createSequence cacheSize="0" incrementBy="10" maxValue="9990" sequenceName="DEPARTMENTS_SEQ" startValue="280"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-14">
+        <createSequence cacheSize="0" maxValue="9999999999999999999999999999" sequenceName="EMPLOYEES_SEQ" startValue="207"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-15">
+        <createSequence cacheSize="0" incrementBy="100" maxValue="9900" sequenceName="LOCATIONS_SEQ" startValue="3300"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-16">
+        <createSequence cacheSize="0" maxValue="3" sequenceName="SEQ" startValue="1"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-17">
+        <createTable tableName="ACTIVITIES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ACTIVITIES_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(75)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-18">
+        <createTable tableName="ACTIVITY_TASK_LINKS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ACTL_PK"/>
+            </column>
+            <column name="ACTIVITY_ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TASK_ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IS_MANDATORY" type="VARCHAR2(1 BYTE)"/>
+            <column name="DISPLAY_SEQUENCE" type="VARCHAR2(10 BYTE)"/>
+            <column name="PERMISSION_ISN" type="NUMBER"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-19">
+        <createTable tableName="ADDRESSES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ADDR_PK"/>
+            </column>
+            <column name="CUSTOMER_ISN" type="NUMBER(16, 0)"/>
+            <column name="SERIAL_NUMBER" type="NUMBER(2, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADDRESS_TYPE_ISN" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADDRESS1" type="NVARCHAR2(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADDRESS2" type="NVARCHAR2(200)"/>
+            <column name="ADDRESS3" type="NVARCHAR2(135)"/>
+            <column name="CITY_ISN" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ZIPCODE" type="VARCHAR2(10 CHAR)"/>
+            <column defaultValue="N" name="IS_PRIMARY" type="VARCHAR2(1 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-20">
+        <createTable tableName="ADDRESS_TYPES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ADTY_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-21">
+        <createTable tableName="APP_USERS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(6, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="APUS_PK"/>
+            </column>
+            <column name="USERNAME" type="VARCHAR2(30 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSWORD_HASH" type="VARCHAR2(100 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SALT" type="VARCHAR2(20 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="NVARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="VARCHAR2(100 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS_ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AVATAR" type="BLOB"/>
+            <column name="BRANCH_ISN" type="NUMBER(6, 0)"/>
+            <column name="ROLE_ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="en" name="DEFAULT_LANG" type="VARCHAR2(20 BYTE)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-22">
+        <createTable tableName="AUDIT_DETAILS">
+            <column name="ISN_ADDT" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ADDT_PK"/>
+            </column>
+            <column name="ISN_ADMS" type="NUMBER(20, 0)"/>
+            <column name="COLUMN_NAME" type="VARCHAR2(50 BYTE)"/>
+            <column name="OPERATION" type="VARCHAR2(50 BYTE)"/>
+            <column name="OLD_VALUE" type="VARCHAR2(50 BYTE)"/>
+            <column name="NEW_VALUE" type="VARCHAR2(50 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-23">
+        <createTable tableName="AUDIT_MASTER">
+            <column name="ISN_ADMS" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ADMS_PK"/>
+            </column>
+            <column name="MACHINE_ID" type="VARCHAR2(50 BYTE)"/>
+            <column name="USER_NAME" type="VARCHAR2(50 BYTE)"/>
+            <column name="TABLE_ISN" type="NUMBER(30, 0)"/>
+            <column name="TABLE_NAME" type="VARCHAR2(50 BYTE)"/>
+            <column name="USER_DATE" type="VARCHAR2(50 BYTE)"/>
+            <column name="USER_TIME" type="VARCHAR2(50 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-24">
+        <createTable tableName="BANKS">
+            <column name="BANK_ID" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="BANKS_PK"/>
+            </column>
+            <column name="BANK" type="VARCHAR2(50 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-25">
+        <createTable tableName="BLOB">
+            <column name="ID" type="NUMBER"/>
+            <column name="IMAGE" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-26">
+        <createTable tableName="BRANCHES">
+            <column name="BRANCH_ID" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="BRANCHES_PK"/>
+            </column>
+            <column name="BANK_ID" type="VARCHAR2(50 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BRANCH" type="VARCHAR2(50 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-27">
+        <createTable tableName="CANDIDATES">
+            <column name="ID" type="NUMBER(10, 0)"/>
+            <column name="CLASS" type="VARCHAR2(50 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-28">
+        <createTable tableName="CATEGORY_WORKFLOW_LINKS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CAWL_PK"/>
+            </column>
+            <column name="CATEGORY_ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="WORKFLOW_ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-29">
+        <createTable tableName="CHANNEL_TYPES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CHTY_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-30">
+        <createTable tableName="CITIES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(6, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CITI_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="NVARCHAR2(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATE_ISN" type="NUMBER(6, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-31">
+        <createTable tableName="CONTACTS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONT_PK"/>
+            </column>
+            <column name="CUSTOMER_ISN" type="NUMBER(16, 0)"/>
+            <column name="SERIAL_NUMBER" type="NUMBER(2, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CONTACT_TYPE_ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CONTACT_VALUE" type="NVARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="N" name="IS_PRIMARY" type="VARCHAR2(1 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-32">
+        <createTable tableName="CONTACT_TYPES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="COTY_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-33">
+        <createTable tableName="COUNTRIES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="COUN_PK"/>
+            </column>
+            <column name="NAME" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TWO_CHAR_CODE" type="VARCHAR2(2 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="THREE_CHAR_CODE" type="VARCHAR2(3 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NUMERIC_CODE" type="VARCHAR2(3 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-34">
+        <createTable tableName="CUSTOMERS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CUST_PK"/>
+            </column>
+            <column name="CUST_ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CUST_TYPE_ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="NVARCHAR2(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FIRST_NAME" type="NVARCHAR2(50)"/>
+            <column name="MIDDLE_NAME" type="NVARCHAR2(50)"/>
+            <column name="LAST_NAME" type="NVARCHAR2(50)"/>
+            <column name="STATUS_ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DOB" type="date"/>
+            <column name="MARITAL_STATUS" type="VARCHAR2(1 CHAR)"/>
+            <column name="MARRIAGE_ANNIVERSARY" type="date"/>
+            <column name="NO_OF_DEPENDENTS" type="NUMBER(2, 0)"/>
+            <column name="SPOUSE_NAME" type="NVARCHAR2(50)"/>
+            <column name="OCCUPATION" type="NVARCHAR2(50)"/>
+            <column name="UNIQUE_CUSTOMER_ID1" type="VARCHAR2(20 CHAR)"/>
+            <column name="UNIQUE_CUSTOMER_ID2" type="VARCHAR2(20 CHAR)"/>
+            <column name="UNIQUE_CUSTOMER_ID3" type="VARCHAR2(20 CHAR)"/>
+            <column name="HOUSEHOLD_INCOME" type="NUMBER(16, 0)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-35">
+        <createTable tableName="CUSTOMER_MIS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CUMI_PK"/>
+            </column>
+            <column name="CUSTOMER_ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MIS_SUBCODE_ISN" type="NUMBER(4, 0)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-36">
+        <createTable tableName="CUSTOMER_STATUSES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CUSS_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-37">
+        <createTable tableName="CUSTOMER_TYPES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CUTY_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(1 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-38">
+        <createTable tableName="DOCUMENTS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="DOCU_PK"/>
+            </column>
+            <column name="CUSTOMER_ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DOCUMENT_TYPE_ISN" type="NUMBER(2, 0)"/>
+            <column name="ISSUE_DATE" type="date"/>
+            <column name="RECEIVED_DATE" type="date"/>
+            <column name="DOCUMENT_NUMBER" type="VARCHAR2(16 BYTE)"/>
+            <column name="PLACE_OF_ISSUE" type="VARCHAR2(20 BYTE)"/>
+            <column name="EXPIRY_DATE" type="date"/>
+            <column name="PARTICULARS" type="VARCHAR2(200 BYTE)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-39">
+        <createTable tableName="DOCUMENT_CATEGORIES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="DOCA_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-40">
+        <createTable tableName="DOCUMENT_CATEGORY_TYPE_LINKS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(6, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="DCTL_PK"/>
+            </column>
+            <column name="NAME" type="NVARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCT_CATEGORY_LINK_ISN" type="NUMBER(6, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DOCUMENT_TYPE_ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="N" name="IS_MANDATORY" type="VARCHAR2(1 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-41">
+        <createTable tableName="DOCUMENT_PAGES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="DOPA_PK"/>
+            </column>
+            <column name="DOCUMENT_ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SERIAL_NUMBER" type="NUMBER(3, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PAGE_NUMBER" type="VARCHAR2(20 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PAGE_NAME" type="VARCHAR2(20 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MEDIA_CONTENT" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RECEIVED_DATE" type="date"/>
+            <column name="MEDIA_MIMETYPE" type="VARCHAR2(512 BYTE)"/>
+            <column name="MEDIA_CHARSET" type="VARCHAR2(512 BYTE)"/>
+            <column name="MEDIA_FILE_NAME" type="VARCHAR2(4000 BYTE)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-42">
+        <createTable tableName="DOCUMENT_TYPES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="DOTY_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="N" name="NEED_DOC_NO" type="VARCHAR2(1 BYTE)"/>
+            <column defaultValue="N" name="NEED_ISSUE_DATE" type="VARCHAR2(1 BYTE)"/>
+            <column defaultValue="N" name="NEED_EXPIRY_DATE" type="VARCHAR2(1 BYTE)"/>
+            <column defaultValue="N" name="NEED_PLACE_OF_ISSUE" type="VARCHAR2(1 BYTE)"/>
+            <column name="CUSTOMER_TYPE_ISN" type="NUMBER(2, 0)"/>
+            <column name="PARAMETER_LEVEL_ISN" type="NUMBER(2, 0)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-43">
+        <createTable tableName="DURATION_TYPES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="DUTY_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(2 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-44">
+        <createTable tableName="EXAMINATION">
+            <column name="STD_ID" type="NUMBER"/>
+            <column name="SUBJECT1" type="NUMBER"/>
+            <column name="SUBJECT2" type="NUMBER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-45">
+        <createTable tableName="EXAMINATION1">
+            <column name="STD_ID" type="NUMBER"/>
+            <column name="SUBJECT1" type="NUMBER"/>
+            <column name="SUBJECT2" type="NUMBER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-46">
+        <createTable tableName="FILE_ATTACHMENTS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="FIAT_PK"/>
+            </column>
+            <column name="FILE_ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DOCUMENT_ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-47">
+        <createTable tableName="FILE_MIS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="FIMI_PK"/>
+            </column>
+            <column name="FILE_ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MIS_SUBCODE_ISN" type="NUMBER(4, 0)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-48">
+        <createTable tableName="FILE_STATUSES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="FIST_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(2 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-49">
+        <createTable tableName="FI_BRANCHES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(6, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="FIBR_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LONG_NAME" type="NVARCHAR2(90)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SHORT_NAME" type="NVARCHAR2(30)"/>
+            <column name="ADDRESS1" type="NVARCHAR2(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADDRESS2" type="NVARCHAR2(45)"/>
+            <column name="ADDRESS3" type="NVARCHAR2(45)"/>
+            <column name="CITY_ISN" type="NUMBER(6, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ZIPCODE" type="VARCHAR2(10 BYTE)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-50">
+        <createTable tableName="LOANS">
+            <column name="LOAN_ID" type="NUMBER(10, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="LOAN_PK"/>
+            </column>
+            <column name="LOAN_TYPE" type="VARCHAR2(20 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-51">
+        <createTable tableName="LOAN_FILES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="LOFI_PK"/>
+            </column>
+            <column name="FILE_NUMBER" type="NUMBER(16, 0)"/>
+            <column name="APPLIED_ON" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BRANCH_ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANNEL_TYPE_ISN" type="NUMBER(2, 0)"/>
+            <column name="CUSTOMER_ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AMOUNT_APPLIED" type="NUMBER(21, 6)"/>
+            <column name="DURATION_APPLIED" type="NUMBER(6, 0)"/>
+            <column name="MORATORIUM_DURATION" type="NUMBER(6, 0)"/>
+            <column name="UNIT_OF_DURATION_ISN" type="NUMBER"/>
+            <column name="LOAN_PURPOSE" type="VARCHAR2(30 BYTE)"/>
+            <column name="INSTALLMENT_AMOUNT" type="NUMBER(21, 6)"/>
+            <column name="INTEREST_CATEGORY" type="VARCHAR2(1 BYTE)"/>
+            <column name="INTEREST_RATE" type="NUMBER(21, 6)"/>
+            <column name="INTEREST_RATE_TYPE" type="VARCHAR2(1 BYTE)"/>
+            <column name="DISBURSEMENT_BRANCH_ISN" type="NUMBER(4, 0)"/>
+            <column name="NATURE_OF_LOAN" type="VARCHAR2(1 BYTE)"/>
+            <column name="DISBURSEMENT_STATUS" type="VARCHAR2(1 BYTE)"/>
+            <column name="SANCTIONED_AMOUNT" type="NUMBER(21, 6)"/>
+            <column name="REPAYMENT_FREQUENCY" type="VARCHAR2(1 BYTE)"/>
+            <column name="SANCTIONED_DURATION" type="NUMBER(6, 0)"/>
+            <column name="INTEREST_RATE_APPLIED" type="NUMBER(21, 6)"/>
+            <column name="INSTALLMENT_APPLIED" type="NUMBER(21, 6)"/>
+            <column name="ACCOUNT_NO" type="VARCHAR2(10 BYTE)"/>
+            <column name="PRODUCT_ISN" type="NUMBER(4, 0)"/>
+            <column name="USER_ISN" type="NUMBER(6, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS_ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="WORKFLOW_CATEGORY_ISN" type="NUMBER(4, 0)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-52">
+        <createTable tableName="MENU_ITEMS">
+            <column name="ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="MEIT_PK"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(100 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME_LANG" type="NVARCHAR2(100)"/>
+            <column defaultValue="fa-apex" name="ICON" type="VARCHAR2(50 BYTE)"/>
+            <column defaultValue="Menu" name="TYPE" type="VARCHAR2(10 BYTE)"/>
+            <column name="PAGE_NUMBER" type="NUMBER(4, 0)"/>
+            <column defaultValue="Y" name="IS_ACTIVE" type="VARCHAR2(1 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DISPLAY_SEQUENCE" type="NUMBER(4, 0)"/>
+            <column name="PARENT_ISN" type="NUMBER(16, 0)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-53">
+        <createTable tableName="MIS_CODES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="MICO_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARAMETER_LEVEL_ISN" type="NUMBER(2, 0)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-54">
+        <createTable tableName="MIS_SUBCODES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="MISU_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MIS_CODE_ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-55">
+        <createTable tableName="PARAMETER_LEVELS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PALE_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-56">
+        <createTable tableName="PER_INFO">
+            <column name="ISN" type="VARCHAR2(50 BYTE)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PER_INFO_PK"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(50 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE_NO" type="NUMBER(10, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="VARCHAR2(50 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ADDRESS" type="VARCHAR2(100 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PAN_NO" type="VARCHAR2(10 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="INCOME" type="NUMBER(20, 0)"/>
+            <column name="INCOME_SOURCE" type="VARCHAR2(50 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-57">
+        <createTable tableName="PRODUCTS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PROD_PK"/>
+            </column>
+            <column name="BRANCH_ISN" type="NUMBER(6, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCT_TEMPLATE_ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="NVARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="N" name="IS_ACTIVE" type="VARCHAR2(1 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="START_FROM" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="999" name="MAX_PERIOD_DAYS" type="NUMBER(6, 0)"/>
+            <column defaultValueNumeric="1" name="MAX_PERIOD_MONTHS" type="NUMBER(6, 0)"/>
+            <column defaultValueNumeric="1" name="MAX_PERIOD_YEARS" type="NUMBER(6, 0)"/>
+            <column name="MIN_PERIOD_DAYS" type="NUMBER(6, 0)"/>
+            <column name="MIN_PERIOD_MONTHS" type="NUMBER(6, 0)"/>
+            <column name="MIN_PERIOD_YEARS" type="NUMBER(6, 0)"/>
+            <column name="MAX_SANCTION_LIMIT" type="NUMBER(21, 6)"/>
+            <column name="MIN_SANCTION_LIMIT" type="NUMBER(21, 6)"/>
+            <column name="IS_GUARANTOR_REQUIRED" type="VARCHAR2(1 BYTE)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-58">
+        <createTable tableName="PRODUCT_CATEGORIES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRCA_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-59">
+        <createTable tableName="PRODUCT_SUBCATEGORIES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRSU_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCT_CATEGORY_ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-60">
+        <createTable tableName="PRODUCT_TEMPLATES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRTE_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="NVARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCT_SUBCATEGORY_ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MAX_PERIOD_DAYS" type="NUMBER(6, 0)"/>
+            <column name="MAX_PERIOD_MONTHS" type="NUMBER(6, 0)"/>
+            <column name="MAX_PERIOD_YEARS" type="NUMBER(6, 0)"/>
+            <column name="MIN_PERIOD_DAYS" type="NUMBER(6, 0)"/>
+            <column name="MIN_PERIOD_MONTHS" type="NUMBER(6, 0)"/>
+            <column name="MIN_PERIOD_YEARS" type="NUMBER(6, 0)"/>
+            <column name="MAX_SANCTION_LIMIT" type="NUMBER(21, 6)"/>
+            <column name="MIN_SANCTION_LIMIT" type="NUMBER(21, 6)"/>
+            <column name="IS_GUARANTOR_REQUIRED" type="VARCHAR2(1 BYTE)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-61">
+        <createTable tableName="PRTE_DOCUMENT_CATEGORY_LINKS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(6, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PTDCL_PK"/>
+            </column>
+            <column name="Name" type="NVARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCT_TEMPLATE_ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DOCUMENT_CATEGORY_ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MIN_COUNT" type="NUMBER(*, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-62">
+        <createTable tableName="ROLES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ROLE_PK"/>
+            </column>
+            <column name="NAME" type="NVARCHAR2(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(100)"/>
+            <column name="WORKFLOW_ISN" type="NUMBER(2, 0)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-63">
+        <createTable tableName="ROLE_PERMISSIONS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(6, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ROPE_PK"/>
+            </column>
+            <column name="ROLE_ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MENU_ITEM_ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-64">
+        <createTable tableName="STATES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(6, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="STAT_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="NVARCHAR2(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COUNTRY_ISN" type="NUMBER(16, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-65">
+        <createTable tableName="STDS">
+            <column name="ID" type="NUMBER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013766"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(50 BYTE)"/>
+            <column name="CLASS" type="VARCHAR2(50 BYTE)"/>
+            <column name="BR_ID" type="NUMBER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-66">
+        <createTable tableName="STUDENTS1">
+            <column name="ID" type="NUMBER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0023053"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(20 BYTE)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-67">
+        <createTable tableName="TASKS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="TASK_PK"/>
+            </column>
+            <column name="NAME" type="VARCHAR2(100 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CUSTOMER_TYPE_ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARAMETER_LEVEL_ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-68">
+        <createTable tableName="TASK_PERMISSIONS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="TAPE_PK"/>
+            </column>
+            <column name="USER_ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TASK_ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="N" name="ALLOW_CREATE" type="VARCHAR2(1 BYTE)"/>
+            <column defaultValue="N" name="ALLOW_UPDATE" type="VARCHAR2(1 BYTE)"/>
+            <column defaultValue="N" name="ALLOW_DELETE" type="VARCHAR2(1 BYTE)"/>
+            <column defaultValue="N" name="ALLOW_VIEW" type="VARCHAR2(1 BYTE)"/>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-69">
+        <createTable tableName="USER_STATUSES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="USST_PK"/>
+            </column>
+            <column name="CODE" type="VARCHAR2(4 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="NVARCHAR2(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-70">
+        <createTable tableName="WORKFLOWS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(2, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="WORK_PK"/>
+            </column>
+            <column name="NAME" type="NVARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-71">
+        <createTable tableName="WORKFLOW_ACTIVITY_LINKS">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="WOAL_PK"/>
+            </column>
+            <column name="CATEGORY_WORKFLOW_LINK_ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ACTIVITY_ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-72">
+        <createTable tableName="WORKFLOW_CATEGORIES">
+            <column autoIncrement="true" defaultOnNull="false" generationType="ALWAYS" name="ISN" type="NUMBER(3, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="WOCA_PK"/>
+            </column>
+            <column name="NAME" type="NVARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCT_ISN" type="NUMBER(4, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AMOUNT_RANGE_FROM" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AMOUNT_RANGE_TO" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="NUMBER(6, 0)"/>
+            <column defaultValueComputed="SYSDATE" name="CREATED_ON" type="TIMESTAMP(6)"/>
+            <column name="UPDATED_BY" type="NUMBER(6, 0)"/>
+            <column name="UPDATED_ON" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-73">
+        <createIndex indexName="ATCI_UK1" tableName="ACTIVITIES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-74">
+        <addUniqueConstraint columnNames="CODE" constraintName="ACTIVITIES_UK1" forIndexName="ATCI_UK1" tableName="ACTIVITIES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-75">
+        <createIndex indexName="ADDR_UK1" tableName="ADDRESSES" unique="true">
+            <column name="CUSTOMER_ISN"/>
+            <column name="SERIAL_NUMBER"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-76">
+        <addUniqueConstraint columnNames="CUSTOMER_ISN, SERIAL_NUMBER" constraintName="ADDR_UK1" forIndexName="ADDR_UK1" tableName="ADDRESSES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-77">
+        <createIndex indexName="ADTY_UK1" tableName="ADDRESS_TYPES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-78">
+        <addUniqueConstraint columnNames="CODE" constraintName="ADTY_UK1" forIndexName="ADTY_UK1" tableName="ADDRESS_TYPES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-79">
+        <createIndex indexName="APUS_UK1" tableName="APP_USERS" unique="true">
+            <column name="USERNAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-80">
+        <addUniqueConstraint columnNames="USERNAME" constraintName="APUS_UK1" forIndexName="APUS_UK1" tableName="APP_USERS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-81">
+        <createIndex indexName="CHTY_UK1" tableName="CHANNEL_TYPES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-82">
+        <addUniqueConstraint columnNames="CODE" constraintName="CHTY_UK1" forIndexName="CHTY_UK1" tableName="CHANNEL_TYPES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-83">
+        <createIndex indexName="CITI_UK1" tableName="CITIES" unique="true">
+            <column name="STATE_ISN"/>
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-84">
+        <addUniqueConstraint columnNames="STATE_ISN, CODE" constraintName="CITI_UK1" forIndexName="CITI_UK1" tableName="CITIES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-85">
+        <createIndex indexName="CONT_UK1" tableName="CONTACTS" unique="true">
+            <column name="CUSTOMER_ISN"/>
+            <column name="SERIAL_NUMBER"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-86">
+        <addUniqueConstraint columnNames="CUSTOMER_ISN, SERIAL_NUMBER" constraintName="CONT_UK1" forIndexName="CONT_UK1" tableName="CONTACTS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-87">
+        <createIndex indexName="COTY_UK1" tableName="CONTACT_TYPES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-88">
+        <addUniqueConstraint columnNames="CODE" constraintName="COTY_UK1" forIndexName="COTY_UK1" tableName="CONTACT_TYPES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-89">
+        <createIndex indexName="COUN_UK1" tableName="COUNTRIES" unique="true">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-90">
+        <addUniqueConstraint columnNames="NAME" constraintName="COUN_UK1" forIndexName="COUN_UK1" tableName="COUNTRIES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-91">
+        <createIndex indexName="COUN_UK2" tableName="COUNTRIES" unique="true">
+            <column name="TWO_CHAR_CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-92">
+        <addUniqueConstraint columnNames="TWO_CHAR_CODE" constraintName="COUN_UK2" forIndexName="COUN_UK2" tableName="COUNTRIES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-93">
+        <createIndex indexName="COUN_UK3" tableName="COUNTRIES" unique="true">
+            <column name="THREE_CHAR_CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-94">
+        <addUniqueConstraint columnNames="THREE_CHAR_CODE" constraintName="COUN_UK3" forIndexName="COUN_UK3" tableName="COUNTRIES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-95">
+        <createIndex indexName="COUN_UK4" tableName="COUNTRIES" unique="true">
+            <column name="NUMERIC_CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-96">
+        <addUniqueConstraint columnNames="NUMERIC_CODE" constraintName="COUN_UK4" forIndexName="COUN_UK4" tableName="COUNTRIES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-97">
+        <createIndex indexName="CUMI_UK1" tableName="CUSTOMER_MIS" unique="true">
+            <column name="CUSTOMER_ISN"/>
+            <column name="MIS_SUBCODE_ISN"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-98">
+        <addUniqueConstraint columnNames="CUSTOMER_ISN, MIS_SUBCODE_ISN" constraintName="CUMI_UK1" forIndexName="CUMI_UK1" tableName="CUSTOMER_MIS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-99">
+        <createIndex indexName="CUSS_UK1" tableName="CUSTOMER_STATUSES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-100">
+        <addUniqueConstraint columnNames="CODE" constraintName="CUSS_UK1" forIndexName="CUSS_UK1" tableName="CUSTOMER_STATUSES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-101">
+        <createIndex indexName="CUST_UK1" tableName="CUSTOMERS" unique="true">
+            <column name="CUST_ISN"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-102">
+        <addUniqueConstraint columnNames="CUST_ISN" constraintName="CUST_UK1" forIndexName="CUST_UK1" tableName="CUSTOMERS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-103">
+        <createIndex indexName="CUTY_UK1" tableName="CUSTOMER_TYPES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-104">
+        <addUniqueConstraint columnNames="CODE" constraintName="CUTY_UK1" forIndexName="CUTY_UK1" tableName="CUSTOMER_TYPES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-105">
+        <createIndex indexName="DOCA_UK1" tableName="DOCUMENT_CATEGORIES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-106">
+        <addUniqueConstraint columnNames="CODE" constraintName="DOCA_UK1" forIndexName="DOCA_UK1" tableName="DOCUMENT_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-107">
+        <createIndex indexName="DOTY_UK1" tableName="DOCUMENT_TYPES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-108">
+        <addUniqueConstraint columnNames="CODE" constraintName="DOTY_UK1" forIndexName="DOTY_UK1" tableName="DOCUMENT_TYPES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-109">
+        <createIndex indexName="DUTY_UK1" tableName="DURATION_TYPES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-110">
+        <addUniqueConstraint columnNames="CODE" constraintName="DUTY_UK1" forIndexName="DUTY_UK1" tableName="DURATION_TYPES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-111">
+        <createIndex indexName="EMP_EMAIL_UK" tableName="EMPLOYEES" unique="true">
+            <column name="EMAIL"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-112">
+        <addUniqueConstraint columnNames="EMAIL" constraintName="EMP_EMAIL_UK" forIndexName="EMP_EMAIL_UK" tableName="EMPLOYEES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-113">
+        <createIndex indexName="FIBR_UK1" tableName="FI_BRANCHES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-114">
+        <addUniqueConstraint columnNames="CODE" constraintName="FIBR_UK1" forIndexName="FIBR_UK1" tableName="FI_BRANCHES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-115">
+        <createIndex indexName="FICO_UK1" tableName="FI_CONFIGURATIONS" unique="true">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-116">
+        <addUniqueConstraint columnNames="NAME" constraintName="FICO_UK1" forIndexName="FICO_UK1" tableName="FI_CONFIGURATIONS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-117">
+        <createIndex indexName="FIMI_UK1" tableName="FILE_MIS" unique="true">
+            <column name="FILE_ISN"/>
+            <column name="MIS_SUBCODE_ISN"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-118">
+        <addUniqueConstraint columnNames="FILE_ISN, MIS_SUBCODE_ISN" constraintName="FIMI_UK1" forIndexName="FIMI_UK1" tableName="FILE_MIS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-119">
+        <createIndex indexName="FIST_UK1" tableName="FILE_STATUSES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-120">
+        <addUniqueConstraint columnNames="CODE" constraintName="FIST_UK1" forIndexName="FIST_UK1" tableName="FILE_STATUSES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-121">
+        <createIndex indexName="LOFI_UK1" tableName="LOAN_FILES" unique="true">
+            <column name="FILE_NUMBER"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-122">
+        <addUniqueConstraint columnNames="FILE_NUMBER" constraintName="LOFI_UK1" forIndexName="LOFI_UK1" tableName="LOAN_FILES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-123">
+        <createIndex indexName="MICO_UK1" tableName="MIS_CODES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-124">
+        <addUniqueConstraint columnNames="CODE" constraintName="MICO_UK1" forIndexName="MICO_UK1" tableName="MIS_CODES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-125">
+        <createIndex indexName="MISU_UK1" tableName="MIS_SUBCODES" unique="true">
+            <column name="MIS_CODE_ISN"/>
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-126">
+        <addUniqueConstraint columnNames="MIS_CODE_ISN, CODE" constraintName="MISU_UK1" forIndexName="MISU_UK1" tableName="MIS_SUBCODES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-127">
+        <createIndex indexName="PALE_UK1" tableName="PARAMETER_LEVELS" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-128">
+        <addUniqueConstraint columnNames="CODE" constraintName="PALE_UK1" forIndexName="PALE_UK1" tableName="PARAMETER_LEVELS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-129">
+        <createIndex indexName="PRCA_UK1" tableName="PRODUCT_CATEGORIES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-130">
+        <addUniqueConstraint columnNames="CODE" constraintName="PRCA_UK1" forIndexName="PRCA_UK1" tableName="PRODUCT_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-131">
+        <createIndex indexName="PROD_UK1" tableName="PRODUCTS" unique="true">
+            <column name="BRANCH_ISN"/>
+            <column name="PRODUCT_TEMPLATE_ISN"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-132">
+        <addUniqueConstraint columnNames="BRANCH_ISN, PRODUCT_TEMPLATE_ISN" constraintName="PROD_UK1" forIndexName="PROD_UK1" tableName="PRODUCTS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-133">
+        <createIndex indexName="PRSU_UK1" tableName="PRODUCT_SUBCATEGORIES" unique="true">
+            <column name="PRODUCT_CATEGORY_ISN"/>
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-134">
+        <addUniqueConstraint columnNames="PRODUCT_CATEGORY_ISN, CODE" constraintName="PRSU_UK1" forIndexName="PRSU_UK1" tableName="PRODUCT_SUBCATEGORIES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-135">
+        <createIndex indexName="PRTE_UK1" tableName="PRODUCT_TEMPLATES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-136">
+        <addUniqueConstraint columnNames="CODE" constraintName="PRTE_UK1" forIndexName="PRTE_UK1" tableName="PRODUCT_TEMPLATES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-137">
+        <createIndex indexName="PTDCL_UK1" tableName="PRTE_DOCUMENT_CATEGORY_LINKS" unique="true">
+            <column name="PRODUCT_TEMPLATE_ISN"/>
+            <column name="DOCUMENT_CATEGORY_ISN"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-138">
+        <addUniqueConstraint columnNames="PRODUCT_TEMPLATE_ISN, DOCUMENT_CATEGORY_ISN" constraintName="PTDCL_UK1" forIndexName="PTDCL_UK1" tableName="PRTE_DOCUMENT_CATEGORY_LINKS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-139">
+        <createIndex indexName="ROLES_UK1" tableName="ROLES" unique="true">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-140">
+        <addUniqueConstraint columnNames="NAME" constraintName="ROLE_UK1" forIndexName="ROLES_UK1" tableName="ROLES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-141">
+        <createIndex indexName="ROPE_UK1" tableName="ROLE_PERMISSIONS" unique="true">
+            <column name="ROLE_ISN"/>
+            <column name="MENU_ITEM_ISN"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-142">
+        <addUniqueConstraint columnNames="ROLE_ISN, MENU_ITEM_ISN" constraintName="ROPE_UK1" forIndexName="ROPE_UK1" tableName="ROLE_PERMISSIONS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-143">
+        <createIndex indexName="STAT_UK1" tableName="STATES" unique="true">
+            <column name="COUNTRY_ISN"/>
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-144">
+        <addUniqueConstraint columnNames="COUNTRY_ISN, CODE" constraintName="STAT_UK1" forIndexName="STAT_UK1" tableName="STATES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-145">
+        <createIndex indexName="TAPE_UK1" tableName="TASK_PERMISSIONS" unique="true">
+            <column name="USER_ISN"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-146">
+        <addUniqueConstraint columnNames="USER_ISN" constraintName="TAPE_UK1" forIndexName="TAPE_UK1" tableName="TASK_PERMISSIONS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-147">
+        <createIndex indexName="TAPE_UK2" tableName="TASK_PERMISSIONS" unique="true">
+            <column name="TASK_ISN"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-148">
+        <addUniqueConstraint columnNames="TASK_ISN" constraintName="TAPE_UK2" forIndexName="TAPE_UK2" tableName="TASK_PERMISSIONS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-149">
+        <createIndex indexName="TASK_UK1" tableName="TASKS" unique="true">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-150">
+        <addUniqueConstraint columnNames="NAME" constraintName="TASK_UK1" forIndexName="TASK_UK1" tableName="TASKS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-151">
+        <createIndex indexName="USST_UK1" tableName="USER_STATUSES" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-152">
+        <addUniqueConstraint columnNames="CODE" constraintName="USST_UK1" forIndexName="USST_UK1" tableName="USER_STATUSES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-153">
+        <createIndex indexName="WOCA_UK1" tableName="WORKFLOW_CATEGORIES" unique="true">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-154">
+        <addUniqueConstraint columnNames="NAME" constraintName="WOCA_UK1" forIndexName="WOCA_UK1" tableName="WORKFLOW_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-155">
+        <createIndex indexName="WORK_UK1" tableName="WORKFLOWS" unique="true">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-156">
+        <addUniqueConstraint columnNames="NAME" constraintName="WORK_UK1" forIndexName="WORK_UK1" tableName="WORKFLOWS"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-157">
+        <createIndex indexName="DEPT_LOCATION_IX" tableName="DEPARTMENTS">
+            <column name="LOCATION_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-158">
+        <createIndex indexName="EMP_DEPARTMENT_IX" tableName="EMPLOYEES">
+            <column name="DEPARTMENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-159">
+        <createIndex indexName="EMP_JOB_IX" tableName="EMPLOYEES">
+            <column name="JOB_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-160">
+        <createIndex indexName="EMP_MANAGER_IX" tableName="EMPLOYEES">
+            <column name="MANAGER_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-161">
+        <createIndex indexName="EMP_NAME_IX" tableName="EMPLOYEES">
+            <column name="LAST_NAME"/>
+            <column name="FIRST_NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-162">
+        <createIndex indexName="JHIST_DEPARTMENT_IX" tableName="JOB_HISTORY">
+            <column name="DEPARTMENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-163">
+        <createIndex indexName="JHIST_EMPLOYEE_IX" tableName="JOB_HISTORY">
+            <column name="EMPLOYEE_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-164">
+        <createIndex indexName="JHIST_JOB_IX" tableName="JOB_HISTORY">
+            <column name="JOB_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-165">
+        <createIndex indexName="LOC_CITY_IX" tableName="LOCATIONS">
+            <column name="CITY"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-166">
+        <createIndex indexName="LOC_COUNTRY_IX" tableName="LOCATIONS">
+            <column name="COUNTRY_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-167">
+        <createIndex indexName="LOC_STATE_PROVINCE_IX" tableName="LOCATIONS">
+            <column name="STATE_PROVINCE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-168">
+        <addForeignKeyConstraint baseColumnNames="ACTIVITY_ISN" baseTableName="ACTIVITY_TASK_LINKS" constraintName="ACTL_ACTI_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="ACTIVITIES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-169">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="ACTIVITY_TASK_LINKS" constraintName="ACTL_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-170">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="ACTIVITY_TASK_LINKS" constraintName="ACTL_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-171">
+        <addForeignKeyConstraint baseColumnNames="PERMISSION_ISN" baseTableName="ACTIVITY_TASK_LINKS" constraintName="ACTL_TAPE_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="TASK_PERMISSIONS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-172">
+        <addForeignKeyConstraint baseColumnNames="TASK_ISN" baseTableName="ACTIVITY_TASK_LINKS" constraintName="ACTL_TASK_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="TASKS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-173">
+        <addForeignKeyConstraint baseColumnNames="ADDRESS_TYPE_ISN" baseTableName="ADDRESSES" constraintName="ADDR_ADTY_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="ADDRESS_TYPES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-174">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="ADDRESSES" constraintName="ADDR_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-175">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="ADDRESSES" constraintName="ADDR_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-176">
+        <addForeignKeyConstraint baseColumnNames="CITY_ISN" baseTableName="ADDRESSES" constraintName="ADDR_CITI_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CITIES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-177">
+        <addForeignKeyConstraint baseColumnNames="CUSTOMER_ISN" baseTableName="ADDRESSES" constraintName="ADDR_CUST_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CUSTOMERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-178">
+        <addForeignKeyConstraint baseColumnNames="ISN_ADMS" baseTableName="AUDIT_DETAILS" constraintName="ADMS_ADDT_FK" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ISN_ADMS" referencedTableName="AUDIT_MASTER" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-179">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="APP_USERS" constraintName="APUS_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-180">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="APP_USERS" constraintName="APUS_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-181">
+        <addForeignKeyConstraint baseColumnNames="BRANCH_ISN" baseTableName="APP_USERS" constraintName="APUS_BRAN_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="FI_BRANCHES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-182">
+        <addForeignKeyConstraint baseColumnNames="ROLE_ISN" baseTableName="APP_USERS" constraintName="APUS_ROLE_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="ROLES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-183">
+        <addForeignKeyConstraint baseColumnNames="BRANCH_ID" baseTableName="BRANCHES" constraintName="BRANCHES_FK" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="BANK_ID" referencedTableName="BANKS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-184">
+        <addForeignKeyConstraint baseColumnNames="BR_ID" baseTableName="STDS" constraintName="BRANCH_FK" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="BR_ID" referencedTableName="BRANCHS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-185">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="CATEGORY_WORKFLOW_LINKS" constraintName="CAWL_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-186">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="CATEGORY_WORKFLOW_LINKS" constraintName="CAWL_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-187">
+        <addForeignKeyConstraint baseColumnNames="CATEGORY_ISN" baseTableName="CATEGORY_WORKFLOW_LINKS" constraintName="CAWL_WOCA_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="WORKFLOW_CATEGORIES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-188">
+        <addForeignKeyConstraint baseColumnNames="WORKFLOW_ISN" baseTableName="CATEGORY_WORKFLOW_LINKS" constraintName="CAWL_WORK_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="WORKFLOWS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-189">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="CITIES" constraintName="CITI_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-190">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="CITIES" constraintName="CITI_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-191">
+        <addForeignKeyConstraint baseColumnNames="STATE_ISN" baseTableName="CITIES" constraintName="CITI_STAT_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="STATES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-192">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="CONTACTS" constraintName="CONT_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-193">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="CONTACTS" constraintName="CONT_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-194">
+        <addForeignKeyConstraint baseColumnNames="CONTACT_TYPE_ISN" baseTableName="CONTACTS" constraintName="CONT_COTY" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CONTACT_TYPES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-195">
+        <addForeignKeyConstraint baseColumnNames="CUSTOMER_ISN" baseTableName="CONTACTS" constraintName="CONT_CUST_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CUSTOMERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-196">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="CUSTOMERS" constraintName="CUST_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-197">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="CUSTOMERS" constraintName="CUST_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-198">
+        <addForeignKeyConstraint baseColumnNames="CUST_TYPE_ISN" baseTableName="CUSTOMERS" constraintName="CUST_CUTY_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CUSTOMER_TYPES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-199">
+        <addForeignKeyConstraint baseColumnNames="STATUS_ISN" baseTableName="CUSTOMERS" constraintName="CUST_STAT_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CUSTOMER_STATUSES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-200">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="DOCUMENT_CATEGORY_TYPE_LINKS" constraintName="DCTL_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-201">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="DOCUMENT_CATEGORY_TYPE_LINKS" constraintName="DCTL_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-202">
+        <addForeignKeyConstraint baseColumnNames="DOCUMENT_TYPE_ISN" baseTableName="DOCUMENT_CATEGORY_TYPE_LINKS" constraintName="DCTL_DOTY_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="DOCUMENT_TYPES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-203">
+        <addForeignKeyConstraint baseColumnNames="PRODUCT_CATEGORY_LINK_ISN" baseTableName="DOCUMENT_CATEGORY_TYPE_LINKS" constraintName="DCTL_PRCL_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="PRTE_DOCUMENT_CATEGORY_LINKS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-204">
+        <addForeignKeyConstraint baseColumnNames="LOCATION_ID" baseTableName="DEPARTMENTS" constraintName="DEPT_LOC_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="LOCATION_ID" referencedTableName="LOCATIONS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-205">
+        <addForeignKeyConstraint baseColumnNames="MANAGER_ID" baseTableName="DEPARTMENTS" constraintName="DEPT_MGR_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="EMPLOYEE_ID" referencedTableName="EMPLOYEES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-206">
+        <addForeignKeyConstraint baseColumnNames="CUSTOMER_ISN" baseTableName="DOCUMENTS" constraintName="DOCU_CUST_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CUSTOMERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-207">
+        <addForeignKeyConstraint baseColumnNames="DOCUMENT_TYPE_ISN" baseTableName="DOCUMENTS" constraintName="DOCU_DOTY_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="DOCUMENT_TYPES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-208">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="DOCUMENTS" constraintName="DOCU__APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-209">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="DOCUMENTS" constraintName="DOCU__APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-210">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="DOCUMENT_PAGES" constraintName="DOPA_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-211">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="DOCUMENT_PAGES" constraintName="DOPA_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-212">
+        <addForeignKeyConstraint baseColumnNames="DOCUMENT_ISN" baseTableName="DOCUMENT_PAGES" constraintName="DOPA_DOCU" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="DOCUMENTS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-213">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="DOCUMENT_TYPES" constraintName="DOTY_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-214">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="DOCUMENT_TYPES" constraintName="DOTY_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-215">
+        <addForeignKeyConstraint baseColumnNames="CUSTOMER_TYPE_ISN" baseTableName="DOCUMENT_TYPES" constraintName="DOTY_CUTY_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CUSTOMER_TYPES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-216">
+        <addForeignKeyConstraint baseColumnNames="PARAMETER_LEVEL_ISN" baseTableName="DOCUMENT_TYPES" constraintName="DOTY_PALE_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="PARAMETER_LEVELS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-217">
+        <addForeignKeyConstraint baseColumnNames="DEPARTMENT_ID" baseTableName="EMPLOYEES" constraintName="EMP_DEPT_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="DEPARTMENT_ID" referencedTableName="DEPARTMENTS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-218">
+        <addForeignKeyConstraint baseColumnNames="JOB_ID" baseTableName="EMPLOYEES" constraintName="EMP_JOB_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="JOB_ID" referencedTableName="JOBS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-219">
+        <addForeignKeyConstraint baseColumnNames="MANAGER_ID" baseTableName="EMPLOYEES" constraintName="EMP_MANAGER_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="EMPLOYEE_ID" referencedTableName="EMPLOYEES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-220">
+        <addForeignKeyConstraint baseColumnNames="STD_ID" baseTableName="EXAMINATION" constraintName="EXST_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="STUDENTS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-221">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="FILE_ATTACHMENTS" constraintName="FIAT_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-222">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="FILE_ATTACHMENTS" constraintName="FIAT_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-223">
+        <addForeignKeyConstraint baseColumnNames="DOCUMENT_ISN" baseTableName="FILE_ATTACHMENTS" constraintName="FIAT_DOCU_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="DOCUMENTS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-224">
+        <addForeignKeyConstraint baseColumnNames="FILE_ISN" baseTableName="FILE_ATTACHMENTS" constraintName="FIAT_LOFI_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="LOAN_FILES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-225">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="FI_BRANCHES" constraintName="FIBR_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-226">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="FI_BRANCHES" constraintName="FIBR_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-227">
+        <addForeignKeyConstraint baseColumnNames="CITY_ISN" baseTableName="FI_BRANCHES" constraintName="FIBR_CITI_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CITIES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-228">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="FI_CONFIGURATIONS" constraintName="FICO_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-229">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="FI_CONFIGURATIONS" constraintName="FICO_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-230">
+        <addForeignKeyConstraint baseColumnNames="CITY_ISN" baseTableName="FI_CONFIGURATIONS" constraintName="FICO_CITI_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CITIES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-231">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="FILE_MIS" constraintName="FIMI_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-232">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="FILE_MIS" constraintName="FIMI_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-233">
+        <addForeignKeyConstraint baseColumnNames="MIS_SUBCODE_ISN" baseTableName="FILE_MIS" constraintName="FIMI_MISU_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="MIS_SUBCODES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-234">
+        <addForeignKeyConstraint baseColumnNames="DEPARTMENT_ID" baseTableName="JOB_HISTORY" constraintName="JHIST_DEPT_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="DEPARTMENT_ID" referencedTableName="DEPARTMENTS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-235">
+        <addForeignKeyConstraint baseColumnNames="EMPLOYEE_ID" baseTableName="JOB_HISTORY" constraintName="JHIST_EMP_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="EMPLOYEE_ID" referencedTableName="EMPLOYEES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-236">
+        <addForeignKeyConstraint baseColumnNames="JOB_ID" baseTableName="JOB_HISTORY" constraintName="JHIST_JOB_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="JOB_ID" referencedTableName="JOBS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-237">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="LOAN_FILES" constraintName="LOFI_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-238">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="LOAN_FILES" constraintName="LOFI_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-239">
+        <addForeignKeyConstraint baseColumnNames="CHANNEL_TYPE_ISN" baseTableName="LOAN_FILES" constraintName="LOFI_CHAN_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CHANNEL_TYPES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-240">
+        <addForeignKeyConstraint baseColumnNames="CUSTOMER_ISN" baseTableName="LOAN_FILES" constraintName="LOFI_CUST_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CUSTOMERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-241">
+        <addForeignKeyConstraint baseColumnNames="UNIT_OF_DURATION_ISN" baseTableName="LOAN_FILES" constraintName="LOFI_DUTY_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="DURATION_TYPES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-242">
+        <addForeignKeyConstraint baseColumnNames="BRANCH_ISN" baseTableName="LOAN_FILES" constraintName="LOFI_FIBR_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="FI_BRANCHES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-243">
+        <addForeignKeyConstraint baseColumnNames="PRODUCT_ISN" baseTableName="LOAN_FILES" constraintName="LOFI_PROD_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="PRODUCTS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-244">
+        <addForeignKeyConstraint baseColumnNames="STATUS_ISN" baseTableName="LOAN_FILES" constraintName="LOFI_STAT_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="FILE_STATUSES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-245">
+        <addForeignKeyConstraint baseColumnNames="USER_ISN" baseTableName="LOAN_FILES" constraintName="LOFI_USER_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-246">
+        <addForeignKeyConstraint baseColumnNames="WORKFLOW_CATEGORY_ISN" baseTableName="LOAN_FILES" constraintName="LOFI_WOCA_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="WORKFLOW_CATEGORIES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-247">
+        <addForeignKeyConstraint baseColumnNames="PARENT_ISN" baseTableName="MENU_ITEMS" constraintName="MEIT_MEIT_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="MENU_ITEMS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-248">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="MIS_CODES" constraintName="MICO_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-249">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="MIS_CODES" constraintName="MICO_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-250">
+        <addForeignKeyConstraint baseColumnNames="PARAMETER_LEVEL_ISN" baseTableName="MIS_CODES" constraintName="MICO_PALE_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="PARAMETER_LEVELS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-251">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="MIS_SUBCODES" constraintName="MISU_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-252">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="MIS_SUBCODES" constraintName="MISU_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-253">
+        <addForeignKeyConstraint baseColumnNames="MIS_CODE_ISN" baseTableName="MIS_SUBCODES" constraintName="MISU_MICO_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="MIS_CODES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-254">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="PRTE_DOCUMENT_CATEGORY_LINKS" constraintName="PDCL_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-255">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="PRTE_DOCUMENT_CATEGORY_LINKS" constraintName="PDCL_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-256">
+        <addForeignKeyConstraint baseColumnNames="DOCUMENT_CATEGORY_ISN" baseTableName="PRTE_DOCUMENT_CATEGORY_LINKS" constraintName="PDCL_DOCA_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="DOCUMENT_CATEGORIES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-257">
+        <addForeignKeyConstraint baseColumnNames="PRODUCT_TEMPLATE_ISN" baseTableName="PRTE_DOCUMENT_CATEGORY_LINKS" constraintName="PDCL_PRTE_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="PRODUCT_TEMPLATES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-258">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="PRODUCTS" constraintName="PROD_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-259">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="PRODUCTS" constraintName="PROD_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-260">
+        <addForeignKeyConstraint baseColumnNames="BRANCH_ISN" baseTableName="PRODUCTS" constraintName="PROD_FIBR_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="FI_BRANCHES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-261">
+        <addForeignKeyConstraint baseColumnNames="PRODUCT_TEMPLATE_ISN" baseTableName="PRODUCTS" constraintName="PROD_PRTL_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="PRODUCT_TEMPLATES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-262">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="PRODUCT_SUBCATEGORIES" constraintName="PRSU_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-263">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="PRODUCT_SUBCATEGORIES" constraintName="PRSU_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-264">
+        <addForeignKeyConstraint baseColumnNames="PRODUCT_CATEGORY_ISN" baseTableName="PRODUCT_SUBCATEGORIES" constraintName="PRSU_PRCA_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="PRODUCT_CATEGORIES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-265">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="PRODUCT_TEMPLATES" constraintName="PRTE_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-266">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="PRODUCT_TEMPLATES" constraintName="PRTE_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-267">
+        <addForeignKeyConstraint baseColumnNames="PRODUCT_SUBCATEGORY_ISN" baseTableName="PRODUCT_TEMPLATES" constraintName="PRTE_PRSU_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="PRODUCT_SUBCATEGORIES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-268">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="ROLES" constraintName="ROLEAPUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-269">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="ROLES" constraintName="ROLE_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-270">
+        <addForeignKeyConstraint baseColumnNames="WORKFLOW_ISN" baseTableName="ROLES" constraintName="ROLE_WORK_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="WORKFLOWS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-271">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="ROLE_PERMISSIONS" constraintName="ROPE_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-272">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="ROLE_PERMISSIONS" constraintName="ROPE_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-273">
+        <addForeignKeyConstraint baseColumnNames="MENU_ITEM_ISN" baseTableName="ROLE_PERMISSIONS" constraintName="ROPE_MEIT_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="MENU_ITEMS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-274">
+        <addForeignKeyConstraint baseColumnNames="ROLE_ISN" baseTableName="ROLE_PERMISSIONS" constraintName="ROPE_ROLE_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="ROLES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-275">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="STATES" constraintName="STAT_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-276">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="STATES" constraintName="STAT_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-277">
+        <addForeignKeyConstraint baseColumnNames="COUNTRY_ISN" baseTableName="STATES" constraintName="STAT_COUN_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="COUNTRIES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-278">
+        <addForeignKeyConstraint baseColumnNames="USER_ISN" baseTableName="TASK_PERMISSIONS" constraintName="TAPE_APUS_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-279">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="TASK_PERMISSIONS" constraintName="TAPE_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-280">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="TASK_PERMISSIONS" constraintName="TAPE_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-281">
+        <addForeignKeyConstraint baseColumnNames="TASK_ISN" baseTableName="TASK_PERMISSIONS" constraintName="TAPE_TASK_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="TASKS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-282">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="TASKS" constraintName="TASK_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-283">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="TASKS" constraintName="TASK_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-284">
+        <addForeignKeyConstraint baseColumnNames="CUSTOMER_TYPE_ISN" baseTableName="TASKS" constraintName="TASK_CUTY_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CUSTOMER_TYPES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-285">
+        <addForeignKeyConstraint baseColumnNames="PARAMETER_LEVEL_ISN" baseTableName="TASKS" constraintName="TASK_PALE_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="PARAMETER_LEVELS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-286">
+        <addForeignKeyConstraint baseColumnNames="ACTIVITY_ISN" baseTableName="WORKFLOW_ACTIVITY_LINKS" constraintName="WOAL_ACTI_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="ACTIVITIES" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-287">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="WORKFLOW_ACTIVITY_LINKS" constraintName="WOAL_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-288">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="WORKFLOW_ACTIVITY_LINKS" constraintName="WOAL_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-289">
+        <addForeignKeyConstraint baseColumnNames="CATEGORY_WORKFLOW_LINK_ISN" baseTableName="WORKFLOW_ACTIVITY_LINKS" constraintName="WOAL_CAWL_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="CATEGORY_WORKFLOW_LINKS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-290">
+        <addForeignKeyConstraint baseColumnNames="CREATED_BY" baseTableName="WORKFLOW_CATEGORIES" constraintName="WOCA_APUS_FK1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-291">
+        <addForeignKeyConstraint baseColumnNames="UPDATED_BY" baseTableName="WORKFLOW_CATEGORIES" constraintName="WOCA_APUS_FK2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="APP_USERS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-292">
+        <addForeignKeyConstraint baseColumnNames="PRODUCT_ISN" baseTableName="WORKFLOW_CATEGORIES" constraintName="WOCA_PROD_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ISN" referencedTableName="PRODUCTS" validate="true"/>
+    </changeSet>
+    <changeSet author="Datavsn (generated)" id="1697791470696-293">
+        <createView fullDefinition="true" viewName="VW_STD_SERVER">CREATE OR REPLACE FORCE VIEW "VW_STD_SERVER" ("id", "name", "class") AS SELECT "id","name","class" FROM STUDENTS@MYLINK003</createView>
+    </changeSet>
+</databaseChangeLog>

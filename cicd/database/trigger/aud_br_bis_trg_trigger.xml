@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog 
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:n0="http://www.oracle.com/xml/ns/dbchangelog-ext" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+	<changeSet id="fa434f74c07535ae9001c3ad9d7b5c6ac1a7aa5e" author="(HR)-Generated" failOnError="false"   runOnChange="true" runAlways="false"  >
+		<n0:createOracleTrigger objectName="AUD_BR_BIS_TRG" objectType="TRIGGER" ownerName="HR"  replaceIfExists="true" >
+			<n0:source><![CDATA[
+  CREATE OR REPLACE EDITIONABLE TRIGGER "HR"."AUD_BR_BIS_TRG" BEFORE
+    INSERT ON branchs
+    FOR EACH ROW
+BEGIN
+    audit_api.check_val('branchs', 'br_id', 'insert', :new.br_id, null);
+    audit_api.check_val('branchs', 'br_name', 'insert', :new.br_name, null);
+END;
+/
+ALTER TRIGGER "HR"."AUD_BR_BIS_TRG" ENABLE]]></n0:source>
+		</n0:createOracleTrigger>
+	</changeSet>
+</databaseChangeLog>
