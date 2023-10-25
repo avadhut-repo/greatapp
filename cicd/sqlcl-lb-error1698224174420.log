@@ -1,0 +1,141 @@
+
+######## ERROR SUMMARY ##################
+Run date:    Wed Oct 25 14:26:14 IST 2023
+Error cnt:2
+
+----------------------------
+File #1:  trigger/secure_employees_trigger.xml
+Errors :1
+
+Error :1
+liquibase.exception.DatabaseException: Trigger SECURE_EMPLOYEES compiled
+
+LINE/COL  ERROR
+--------- -------------------------------------------------------------
+4/1       PLS-00103: Encountered the symbol "ALTER" 
+Errors: check compiler log
+	at oracle.dbtools.raptor.liquibase.util.QueryUtils.runSqlReturnResult(QueryUtils.java:245)
+	at liquibase.executor.jvm.SqlClExecutor.execute(SqlClExecutor.java:90)
+	at liquibase.database.AbstractJdbcDatabase.execute(AbstractJdbcDatabase.java:1270)
+	at liquibase.database.AbstractJdbcDatabase.executeStatements(AbstractJdbcDatabase.java:1252)
+	at liquibase.changelog.ChangeSet.execute(ChangeSet.java:685)
+	at liquibase.changelog.visitor.UpdateVisitor.visit(UpdateVisitor.java:56)
+	at liquibase.changelog.ChangeLogIterator$2.lambda$null$0(ChangeLogIterator.java:115)
+	at liquibase.Scope.lambda$child$0(Scope.java:180)
+	at liquibase.Scope.child(Scope.java:189)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.Scope.child(Scope.java:158)
+	at liquibase.changelog.ChangeLogIterator$2.lambda$run$1(ChangeLogIterator.java:114)
+	at liquibase.Scope.lambda$child$0(Scope.java:180)
+	at liquibase.Scope.child(Scope.java:189)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.Scope.child(Scope.java:158)
+	at liquibase.Scope.child(Scope.java:243)
+	at liquibase.changelog.ChangeLogIterator$2.run(ChangeLogIterator.java:95)
+	at liquibase.Scope.lambda$child$0(Scope.java:180)
+	at liquibase.Scope.child(Scope.java:189)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.Scope.child(Scope.java:158)
+	at liquibase.Scope.child(Scope.java:243)
+	at liquibase.Scope.child(Scope.java:247)
+	at liquibase.changelog.ChangeLogIterator.run(ChangeLogIterator.java:67)
+	at liquibase.Liquibase.lambda$null$0(Liquibase.java:289)
+	at liquibase.Scope.lambda$child$0(Scope.java:180)
+	at liquibase.Scope.child(Scope.java:189)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.Scope.child(Scope.java:158)
+	at liquibase.Scope.child(Scope.java:243)
+	at liquibase.Liquibase.lambda$update$1(Liquibase.java:288)
+	at liquibase.Scope.lambda$child$0(Scope.java:180)
+	at liquibase.Scope.child(Scope.java:189)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.Scope.child(Scope.java:158)
+	at liquibase.Liquibase.runInScope(Liquibase.java:2445)
+	at liquibase.Liquibase.update(Liquibase.java:235)
+	at liquibase.Liquibase.update(Liquibase.java:220)
+	at oracle.dbtools.raptor.liquibase.core.CommandGenerator.lambda$UpdateCommand$30(CommandGenerator.java:1292)
+	at liquibase.Scope.lambda$child$0(Scope.java:180)
+	at liquibase.Scope.child(Scope.java:189)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.Scope.child(Scope.java:158)
+	at oracle.dbtools.raptor.liquibase.core.CommandGenerator.UpdateCommand(CommandGenerator.java:1287)
+	at oracle.dbtools.raptor.scriptrunner.commands.liquibase.LbCommand.handleEvent(LbCommand.java:364)
+	at oracle.dbtools.raptor.newscriptrunner.CommandRegistry.fireListeners(CommandRegistry.java:449)
+	at oracle.dbtools.raptor.newscriptrunner.ScriptRunner.run(ScriptRunner.java:241)
+	at oracle.dbtools.raptor.newscriptrunner.ScriptExecutor.run(ScriptExecutor.java:370)
+	at oracle.dbtools.raptor.newscriptrunner.ScriptExecutor.run(ScriptExecutor.java:255)
+	at oracle.dbtools.raptor.scriptrunner.cmdline.SqlCli.processLine(SqlCli.java:1189)
+	at oracle.dbtools.raptor.scriptrunner.cmdline.SqlCli.runSqlcl(SqlCli.java:1370)
+	at oracle.dbtools.raptor.scriptrunner.cmdline.SqlCli.main(SqlCli.java:350)
+
+----------------------------
+----------------------------
+File #2:  db_link/mylink003_db_link.xml
+Errors :1
+
+Error :1
+liquibase.exception.DatabaseException: Error starting at line : 1 in command -
+CREATE DATABASE LINK "MYLINK003"
+   CONNECT TO "sa" IDENTIFIED BY "<PASSWORD>"
+   USING 'source1'
+Error report -
+ORA-02011: duplicate database link name
+02011. 00000 -  "duplicate database link name"
+*Cause:    The database link name specified in a CREATE DATABASE
+           LINK statement already existed.
+*Action:   Either specify a new name or drop the existing link.
+	at oracle.dbtools.raptor.liquibase.util.QueryUtils.runSqlReturnResult(QueryUtils.java:221)
+	at liquibase.executor.jvm.SqlClExecutor.execute(SqlClExecutor.java:90)
+	at liquibase.database.AbstractJdbcDatabase.execute(AbstractJdbcDatabase.java:1270)
+	at liquibase.database.AbstractJdbcDatabase.executeStatements(AbstractJdbcDatabase.java:1252)
+	at liquibase.changelog.ChangeSet.execute(ChangeSet.java:685)
+	at liquibase.changelog.visitor.UpdateVisitor.visit(UpdateVisitor.java:56)
+	at liquibase.changelog.ChangeLogIterator$2.lambda$null$0(ChangeLogIterator.java:115)
+	at liquibase.Scope.lambda$child$0(Scope.java:180)
+	at liquibase.Scope.child(Scope.java:189)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.Scope.child(Scope.java:158)
+	at liquibase.changelog.ChangeLogIterator$2.lambda$run$1(ChangeLogIterator.java:114)
+	at liquibase.Scope.lambda$child$0(Scope.java:180)
+	at liquibase.Scope.child(Scope.java:189)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.Scope.child(Scope.java:158)
+	at liquibase.Scope.child(Scope.java:243)
+	at liquibase.changelog.ChangeLogIterator$2.run(ChangeLogIterator.java:95)
+	at liquibase.Scope.lambda$child$0(Scope.java:180)
+	at liquibase.Scope.child(Scope.java:189)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.Scope.child(Scope.java:158)
+	at liquibase.Scope.child(Scope.java:243)
+	at liquibase.Scope.child(Scope.java:247)
+	at liquibase.changelog.ChangeLogIterator.run(ChangeLogIterator.java:67)
+	at liquibase.Liquibase.lambda$null$0(Liquibase.java:289)
+	at liquibase.Scope.lambda$child$0(Scope.java:180)
+	at liquibase.Scope.child(Scope.java:189)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.Scope.child(Scope.java:158)
+	at liquibase.Scope.child(Scope.java:243)
+	at liquibase.Liquibase.lambda$update$1(Liquibase.java:288)
+	at liquibase.Scope.lambda$child$0(Scope.java:180)
+	at liquibase.Scope.child(Scope.java:189)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.Scope.child(Scope.java:158)
+	at liquibase.Liquibase.runInScope(Liquibase.java:2445)
+	at liquibase.Liquibase.update(Liquibase.java:235)
+	at liquibase.Liquibase.update(Liquibase.java:220)
+	at oracle.dbtools.raptor.liquibase.core.CommandGenerator.lambda$UpdateCommand$30(CommandGenerator.java:1292)
+	at liquibase.Scope.lambda$child$0(Scope.java:180)
+	at liquibase.Scope.child(Scope.java:189)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.Scope.child(Scope.java:158)
+	at oracle.dbtools.raptor.liquibase.core.CommandGenerator.UpdateCommand(CommandGenerator.java:1287)
+	at oracle.dbtools.raptor.scriptrunner.commands.liquibase.LbCommand.handleEvent(LbCommand.java:364)
+	at oracle.dbtools.raptor.newscriptrunner.CommandRegistry.fireListeners(CommandRegistry.java:449)
+	at oracle.dbtools.raptor.newscriptrunner.ScriptRunner.run(ScriptRunner.java:241)
+	at oracle.dbtools.raptor.newscriptrunner.ScriptExecutor.run(ScriptExecutor.java:370)
+	at oracle.dbtools.raptor.newscriptrunner.ScriptExecutor.run(ScriptExecutor.java:255)
+	at oracle.dbtools.raptor.scriptrunner.cmdline.SqlCli.processLine(SqlCli.java:1189)
+	at oracle.dbtools.raptor.scriptrunner.cmdline.SqlCli.runSqlcl(SqlCli.java:1370)
+	at oracle.dbtools.raptor.scriptrunner.cmdline.SqlCli.main(SqlCli.java:350)
+
+----------------------------
